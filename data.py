@@ -33,36 +33,19 @@ class Mutations(ObjectType):
 
 schema = Schema(query=Query, mutation = Mutations)
 
-answ = schema.execute(
-    """
-        mutation newUser($id: String) {
-            newUser(id: $id, name: "test", coinCount: 4){
-                user {
-                    id
-                    name
-                    coinCount
-                }
-                
-            }        
-        }
-    """,variable_values={"id" : "12345", "name" : "test", "coinCount" : "4"}
-)
-print(answ)
-
-newansw = schema.execute("""
-    { userList }
-""")
-print(newansw)
-'''
-app = Flask(__name__)
-
-@app.route("/", methods = ["GET","POST"])
-def main():
-    if request.method == "POST":
-        pass
-    if request.method == "GET":
-        pass
-    return 
-
-app.run()
-'''
+def add_user(id, name, coinCount):
+    new = schema.execute(
+        """
+            mutation newUser($id: String) {
+                newUser(id: $id, name: "test", coinCount: 4){
+                    user {
+                        id
+                        name
+                        coinCount
+                    }
+                    
+                }        
+            }
+        """,variable_values={"id" : id, "name" : name, "coinCount" : coinCount}
+    )
+    return new

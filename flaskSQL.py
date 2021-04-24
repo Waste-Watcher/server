@@ -1,5 +1,7 @@
-from flask import Flask
+from flask import Flask, request
+import flask_graphql
 from flask_sqlalchemy import SQLAlchemy
+import data
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
@@ -26,3 +28,15 @@ class Item(db.Model):
     item_type = db.Column(db.String(120), nullable=False)
     def __repr__(self):
         return f"{self.item_type},{self.ownerid}"
+
+@app.route("/", methods = ["GET","POST"])
+def getGraphQL():
+    print(request.data)
+
+app.add_url_rule('/graphql', view_func=GraphQLView.as_view(
+    'graphql',
+    schema=data.schema,
+    graphiql=True,
+))
+
+app.run()
