@@ -49,15 +49,14 @@ class newUser(Mutation):
         id = String()
         name = String()
         email = String()
-        earth_coins = Int()
 
     ok = Boolean()
 
     user = Field(User)
 
     def mutate(self, info, id, name, earth_coins):
-        user = User(id = id, name = name, email = email, earth_coins = earth_coins)
-        sqlUser = userData(id = id, name = name, email = email, earth_coins = earth_coins)
+        user = User(id = id, name = name, email = email, earth_coins = 0)
+        sqlUser = userData(id = id, name = name, email = email, earth_coins = 0)
         db.session.add(sqlUser)
         db.session.commit()
         ok = True
@@ -69,20 +68,19 @@ class Mutations(ObjectType):
 
 schema = Schema(query=Query, mutation = Mutations)
 
-def add_user(id, name, earth_coins):
+def add_user(id, name):
     new = schema.execute(
         """
             mutation newUser($id: String) {
-                newUser(id: $id, name: "test", earth_coins: 4){
+                newUser(id: $id, name: "test"){
                     user {
                         id
                         name
-                        earth_coins
                     }
                     
                 }        
             }
-        """,variable_values={"id" : id, "name" : name, "earth_coins" : earth_coins}
+        """,variable_values={"id" : id, "name" : name}
     )
     return new
 
