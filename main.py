@@ -10,10 +10,7 @@ class Query(ObjectType):
     userList = List(User)
     
     def resolve_userList(self, info, id):
-        return [
-            User(id="1234",name="asa",coinCount=10),
-            User(id="5678",name="bob",coinCount=12)
-        ]
+        return self.userList
 
 class newUser(Mutation):
     class Arguments:
@@ -38,8 +35,8 @@ schema = Schema(query=Query, mutation = Mutations)
 
 answ = schema.execute(
     """
-        mutation newUser {
-            newUser(id: "12345", name: "test", coinCount: 4){
+        mutation newUser($id: String) {
+            newUser(id: $id, name: "test", coinCount: 4){
                 user {
                     id
                     name
@@ -48,7 +45,7 @@ answ = schema.execute(
                 
             }        
         }
-    """
+    """,variable_values={"id" : "12345", "name" : "test", "coinCount" : "4"}
 ) 
 print(answ)
 '''
