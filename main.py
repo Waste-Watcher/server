@@ -17,22 +17,19 @@ class Query(ObjectType):
 
 class newUser(Mutation):
     class Arguments:
-        print(1)
         id = String()
         name = String()
         coinCount = Int()
-        print(2)
 
     ok = Boolean()
 
-    tempUser = Field(User)
-    print(3)
+    user = Field(User)
+
     def mutate(self, info, id, name, coinCount):
-        print(4)
-        tempUser = User(id = id, name = name, coinCount = coinCount)
+        user = User(id = id, name = name, coinCount = coinCount)
         ok = True
-        print(tempUser)
-        return newUser(tempUser = tempUser, ok=ok)
+        print(user)
+        return newUser(user = user, ok = ok)
 
 class Mutations(ObjectType):
     new_user = newUser.Field()
@@ -43,9 +40,12 @@ answ = schema.execute(
     """
         mutation newUser {
             newUser(id: "12345", name: "test", coinCount: 4){
-                id
-                name
-                coinCount
+                user {
+                    id
+                    name
+                    coinCount
+                }
+                
             }        
         }
     """
