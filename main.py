@@ -2,14 +2,15 @@ from graphene import ObjectType, String, Schema
 from flask import Flask, request
 
 class Query(objectType):
-    user = String(
+    user = String()
     id = String()
     email = String()
     points = String()
-    )
+    
 
     def resolve_user(root, info, id):
         return 
+
 schema = Schema(query=Query)
 
 app = Flask(__name__)
