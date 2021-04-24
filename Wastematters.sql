@@ -26,7 +26,6 @@ INSERT INTO Users(id,email,display_name,avatar,earth_coins)
 VALUES('id here','email here', 'display name here', 'None',0
 );
 
--- @ BLOCK 
 -- @BLOCK
 INSERT INTO Items(owner_id,item_name)
 VALUES ('owner id here', 'item name here')
