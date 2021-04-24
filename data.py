@@ -1,12 +1,16 @@
-from graphene import ObjectType, String, Schema, Int, List, Mutation, Field, ID, Boolean
+import graphene
+#from graphene import ObjectType, String, Schema, Int, List, Mutation, Field, ID, Boolean
 from flask import Flask, request
 from flask_graphql import GraphQLView
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 app.config['SECRET KEY'] = ''
+
 db = SQLAlchemy(app)
+db.create_all()
 
 class userData(db.Model):
     id = db.Column(db.String(80), primary_key=True)
@@ -32,60 +36,48 @@ class Item(db.Model):
 def getGraphQL():
     return(request.data)
 '''
-app.run()
 
-class User(ObjectType):
-    id = ID()
-    name = String()
-    email = String()
-    earth_coins = Int()
-
-class Query(ObjectType):    
+class User(graphene.ObjectType):
+    id = graphene.ID()
+    name = graphene.String()
+    email = graphene.String()
+    earth_coins = graphene.Int()
+print(1)
+class Query(graphene.ObjectType):    
     def resolve_User(self, info, id):
-        return User()
-
-class newUser(Mutation):
+        return
+print(2)
+class newUser(graphene.Mutation):
+    
     class Arguments:
-        id = String()
-        name = String()
-        email = String()
+        id = graphene.String()
+        name = graphene.String()
+        email = graphene.String()
+    
+    ok = graphene.Boolean()
 
-    ok = Boolean()
-
-    user = Field(User)
+    user = graphene.Field(User)
 
     def mutate(self, info, id, name, earth_coins):
         user = User(id = id, name = name, email = email, earth_coins = 0)
         sqlUser = userData(id = id, name = name, email = email, earth_coins = 0)
         db.session.add(sqlUser)
         db.session.commit()
+        
         ok = True
         print(user)
         return newUser(user = user, ok = ok)
-
-class Mutations(ObjectType):
+        
+print(3)
+class Mutations(graphene.ObjectType):
     new_user = newUser.Field()
-
-schema = Schema(query=Query, mutation = Mutations)
-
-def add_user(id, name):
-    new = schema.execute(
-        """
-            mutation newUser($id: String) {
-                newUser(id: $id, name: "test"){
-                    user {
-                        id
-                        name
-                    }
-                    
-                }        
-            }
-        """,variable_values={"id" : id, "name" : name}
-    )
-    return new
-
+print(4)
+schema = graphene.Schema(query = Query, mutation = Mutations)
+print(6)
 app.add_url_rule('/graphql', view_func=GraphQLView.as_view(
     'graphql',
     schema=schema,
     graphiql=True,
 ))
+
+app.run()
