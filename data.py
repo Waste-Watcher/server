@@ -10,12 +10,12 @@ db = SQLAlchemy(app)
 
 class userData(db.Model):
     id = db.Column(db.String(80), primary_key=True)
-    username = db.Column(db.String(20), unique=True, nullable=False)
+    name = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     #avatar = db.Column(db.String(120),nullable=False,default = default.jpg)
     earth_coins = db.Column(db.Integer(), nullable = False)
     def __repr__(self):
-        return f"{self.username},{self.email},{self.earth_coins}"
+        return f"{self.name},{self.email},{self.earth_coins}"
     def update_earth_coins(self,newamount):
         self.earth_coins = newamount
     #def update_avatar(self,newavatar):
@@ -32,18 +32,13 @@ class Item(db.Model):
 def getGraphQL():
     return(request.data)
 '''
-app.add_url_rule('/graphql', view_func=GraphQLView.as_view(
-    'graphql',
-    schema=schema,
-    graphiql=True,
-))
-
 app.run()
 
 class User(ObjectType):
     id = ID()
     name = String()
-    coinCount = Int()
+    email = String()
+    earth_coins = Int()
 
 class Query(ObjectType):    
     def resolve_User(self, info, id):
@@ -53,14 +48,18 @@ class newUser(Mutation):
     class Arguments:
         id = String()
         name = String()
-        coinCount = Int()
+        email = String()
+        earth_coins = Int()
 
     ok = Boolean()
 
     user = Field(User)
 
-    def mutate(self, info, id, name, coinCount):
-        user = User(id = id, name = name, coinCount = coinCount)
+    def mutate(self, info, id, name, earth_coins):
+        user = User(id = id, name = name, email = email, earth_coins = earth_coins)
+        sqlUser = userData(id = id, name = name, email = email, earth_coins = earth_coins)
+        db.session.add(sqlUser)
+        db.session.commit()
         ok = True
         print(user)
         return newUser(user = user, ok = ok)
@@ -70,19 +69,25 @@ class Mutations(ObjectType):
 
 schema = Schema(query=Query, mutation = Mutations)
 
-def add_user(id, name, coinCount):
+def add_user(id, name, earth_coins):
     new = schema.execute(
         """
             mutation newUser($id: String) {
-                newUser(id: $id, name: "test", coinCount: 4){
+                newUser(id: $id, name: "test", earth_coins: 4){
                     user {
                         id
                         name
-                        coinCount
+                        earth_coins
                     }
                     
                 }        
             }
-        """,variable_values={"id" : id, "name" : name, "coinCount" : coinCount}
+        """,variable_values={"id" : id, "name" : name, "earth_coins" : earth_coins}
     )
     return new
+
+app.add_url_rule('/graphql', view_func=GraphQLView.as_view(
+    'graphql',
+    schema=schema,
+    graphiql=True,
+))
