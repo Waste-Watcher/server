@@ -21,12 +21,14 @@ class newUser(Mutation):
         id = String()
         name = String()
         coinCount = Int()
+        print(2)
 
     ok = Boolean()
 
     tempUser = Field(User)
-
+    print(3)
     def mutate(self, info, id, name, coinCount):
+        print(4)
         tempUser = User(id = id, name = name, coinCount = coinCount)
         ok = True
         print(tempUser)
