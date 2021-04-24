@@ -46,8 +46,13 @@ answ = schema.execute(
             }        
         }
     """,variable_values={"id" : "12345", "name" : "test", "coinCount" : "4"}
-) 
+)
 print(answ)
+
+newansw = schema.execute("""
+    { userList }
+""")
+print(newansw)
 '''
 app = Flask(__name__)
 
