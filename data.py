@@ -7,7 +7,6 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
-app.config['SECRET KEY'] = ''
 
 db = SQLAlchemy(app)
 db.create_all()
@@ -56,12 +55,13 @@ class newUser(graphene.Mutation):
     user = graphene.Field(lambda: userInfo)
     ok = graphene.Boolean()
 
-    def mutate(id, name, email):
+    def mutate(root, info, id, name, email):
+        print(1) # this does not get printed
         user = userInfo(id = id, name = name, email = email, earth_coins = 0)
-        sqlUser = userData(id = id, name = name, email = email, earth_coins = 0)
+        sqlUser = userData(identification = id, name = name, email = email, earth_coins = 0)
         db.session.add(sqlUser)
         db.session.commit()
-        
+
         ok = True
         print(user)
         return newUser(user = user, ok = ok)
