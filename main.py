@@ -12,5 +12,13 @@ app.add_url_rule('/graphql', view_func=GraphQLView.as_view(
     graphiql=True,
 ))
 
+@app.route('/', methods=["POST"])
+def upload_image():
+    data = request.get_json()
+    base64 = data['data']
+    print(base64)
+    # TODO: Implement some machine learning stuff and see if the image met criteria
+    return { "status": "successful" }
+
 db.create_all()
 app.run()
