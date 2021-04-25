@@ -13,7 +13,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 
 db = SQLAlchemy(app)
-db.create_all()
+
 
 class User(db.Model):
     id = db.Column(db.String(80), primary_key=True,unique=True)
@@ -45,8 +45,10 @@ class userInfo(graphene.ObjectType):
 class Query(graphene.ObjectType):
     getUser = graphene.String(id=graphene.String())
     def resolve_getUser(parent, id):
-        return userInfo(id = ) 
-        #user = User.query.filter_by(id=id).get()
+        user = User.query.filter_by(id = id).first()
+        if not user:
+            return
+        return userInfo(id = user.id, name = user.name, email = user.email, earth_coins = user.earth_coins)
 
 
 class newUser(graphene.Mutation):
@@ -78,5 +80,5 @@ app.add_url_rule('/graphql', view_func=GraphQLView.as_view(
     schema=schema,
     graphiql=True,
 ))
-
+db.create_all()
 app.run()
