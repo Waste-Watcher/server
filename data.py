@@ -16,7 +16,7 @@ db = SQLAlchemy(app)
 db.create_all()
 
 class User(db.Model):
-    identification = db.Column(db.String(80), primary_key=True,unique=True)
+    id = db.Column(db.String(80), primary_key=True,unique=True)
     name = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     #avatar = db.Column(db.String(120),nullable=False,default = default.jpg)
@@ -28,17 +28,13 @@ class User(db.Model):
     #def update_avatar(self,newavatar):
     #   self.newavatar = newavatar
     
+    
 class Item(db.Model):
     itemid = db.Column(db.String(80), primary_key=True)
     ownerid = db.Column(db.String(80), nullable=False)
     item_type = db.Column(db.String(120), nullable=False)
     def __repr__(self):
         return f"{self.item_type},{self.ownerid}"
-'''
-@app.route("/", methods = ["GET","POST"])
-def getGraphQL():
-    return(request.data)
-''' 
 
 class userInfo(graphene.ObjectType):
     id = graphene.ID()
@@ -49,7 +45,10 @@ class userInfo(graphene.ObjectType):
 class Query(graphene.ObjectType):
     getUser = graphene.String(id=graphene.String())
     def resolve_getUser(parent, id):
-        return f"{userInfo.id}, {userInfo.name}"
+        return userInfo(id = ) 
+        User.query.get(id)
+        #user = User.query.filter_by(id=id).get()
+
 
 class newUser(graphene.Mutation):
     class Arguments:
