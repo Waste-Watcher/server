@@ -1,5 +1,5 @@
 import graphene
-from database import User, db
+from database import User, Item, db
 
 class userInfo(graphene.ObjectType):
     id = graphene.ID()
@@ -7,13 +7,20 @@ class userInfo(graphene.ObjectType):
     email = graphene.String()
     earth_coins = graphene.Int(required = False)
 
+class itemInfo(graphene.ObjectType):
+    itemid = graphene.ID()
+    ownderid = graphene.String()
+    item_type = graphene.String()
+    owner_id = graphene.String()
+
 class Query(graphene.ObjectType):
     getUser = graphene.String(id=graphene.String())
+
     def resolve_getUser(root, id):
         user = User.query.filter_by(id = id).first()
         if not user:
             return
-        return userInfo(id = user.id, name = user.name, email = user.email, earth_coins = user.earth_coins)
+        return userInfo(id = user.id, name = user.display_name, email = user.email, earth_coins = user.earth_coins, items = user.items)
 
 
 class newUser(graphene.Mutation):
