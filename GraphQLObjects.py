@@ -13,13 +13,9 @@ class userInfo(graphene.ObjectType):
     earth_coins = graphene.Int()
     items = graphene.List(itemInfo)
 
-class itemInfo(graphene.ObjectType):
-    itemid = graphene.ID()
-    ownderid = graphene.String()
-    item_type = graphene.String()
-
 class Query(graphene.ObjectType):
     User = graphene.Field(userInfo, id=graphene.String())
+    Item = graphene.Field(itemInfo, id=graphene.String())
 
     def resolve_User(root, parent, id):
         user = User.query.filter_by(id = id).first()
