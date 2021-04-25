@@ -15,7 +15,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 db = SQLAlchemy(app)
 db.create_all()
 
-class userData(db.Model):
+class User(db.Model):
     identification = db.Column(db.String(80), primary_key=True,unique=True)
     name = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -62,7 +62,7 @@ class newUser(graphene.Mutation):
     def mutate(root, info, id, name, email):
         print(1) # this does not get printed
         user = userInfo(id = id, name = name, email = email, earth_coins = 0)
-        sqlUser = userData(identification = id, name = name, email = email, earth_coins = 0)
+        sqlUser = User(identification = id, name = name, email = email, earth_coins = 0)
         db.session.add(sqlUser)
         db.session.commit()
 
