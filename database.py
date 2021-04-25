@@ -19,9 +19,8 @@ class User(db.Model):
     
     
 class Item(db.Model):
-    itemid = db.Column(db.String(80), primary_key=True)
-    ownerid = db.Column(db.String(80), nullable=False)
-    item_type = db.Column(db.String(120), nullable=False)
+    id = db.Column(db.Integer(), primary_key=True)
+    item_name = db.Column(db.String(20), nullable=False)
     owner_id = db.Column(db.String(255), db.ForeignKey(User.id), nullable=False)
     def __repr__(self):
         return f"{self.item_type},{self.ownerid}"

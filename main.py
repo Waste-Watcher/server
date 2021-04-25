@@ -1,5 +1,6 @@
 import graphene
-# from flask import Flask, request
+
+from flask import request
 from flask_graphql import GraphQLView
 from dbinfo import app, db
 from GraphQLObjects import Query, Mutations
@@ -12,7 +13,7 @@ app.add_url_rule('/graphql', view_func=GraphQLView.as_view(
     graphiql=True,
 ))
 
-@app.route('/', methods=["POST"])
+@app.route('/sendimage', methods=["POST"])
 def upload_image():
     data = request.get_json()
     base64 = data['data']
