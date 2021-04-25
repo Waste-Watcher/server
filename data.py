@@ -46,7 +46,6 @@ class Query(graphene.ObjectType):
     getUser = graphene.String(id=graphene.String())
     def resolve_getUser(parent, id):
         return userInfo(id = ) 
-        User.query.get(id)
         #user = User.query.filter_by(id=id).get()
 
 
