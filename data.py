@@ -37,16 +37,16 @@ def getGraphQL():
     return(request.data)
 '''
 
-class User(graphene.ObjectType):
+class userInfo(graphene.ObjectType):
     id = graphene.ID()
     name = graphene.String()
     email = graphene.String()
     earth_coins = graphene.Int()
 print(1)
 class Query(graphene.ObjectType):
-    txt = graphene.String()    
-    def resolve_User(self, info, id):
-        return f"{User.id}, {User.name}"
+    getUser = graphene.String(id=graphene.String())
+    def resolve_getUser(parent, id):
+        return f"{userInfo.id}, {userInfo.name}"
 print(2)
 class newUser(graphene.Mutation):
     class Arguments:
@@ -56,10 +56,10 @@ class newUser(graphene.Mutation):
     
     ok = graphene.Boolean()
 
-    user = graphene.Field(User)
+    user = graphene.Field(lambda: userInfo)
 
-    def mutate(self, info, id, name, earth_coins):
-        user = User(id = id, name = name, email = email, earth_coins = 0)
+    def mutate(id, name, email):
+        user = userInfo(id = id, name = name, email = email, earth_coins = 0)
         sqlUser = userData(id = id, name = name, email = email, earth_coins = 0)
         db.session.add(sqlUser)
         db.session.commit()
