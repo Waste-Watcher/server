@@ -6,7 +6,6 @@ from flask_sqlalchemy import SQLAlchemy
 import pymysql
 import secrets
 
-
 conn = "mysql+pymysql://{0}:{1}@{2}{3}".format(secrets.dbhost,secrets.dbuser,secrets.dbemail) 
 # do those "secrets" exist or are you following a tutorial that has those files
 app = Flask(__name__)
