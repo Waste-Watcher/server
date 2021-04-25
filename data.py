@@ -43,12 +43,12 @@ class User(graphene.ObjectType):
     email = graphene.String()
     earth_coins = graphene.Int()
 print(1)
-class Query(graphene.ObjectType):    
+class Query(graphene.ObjectType):
+    txt = graphene.String()    
     def resolve_User(self, info, id):
-        return
+        return f"{User.id}, {User.name}"
 print(2)
 class newUser(graphene.Mutation):
-    
     class Arguments:
         id = graphene.String()
         name = graphene.String()
@@ -71,8 +71,11 @@ class newUser(graphene.Mutation):
 print(3)
 class Mutations(graphene.ObjectType):
     new_user = newUser.Field()
+    
 print(4)
+
 schema = graphene.Schema(query = Query, mutation = Mutations)
+
 print(6)
 app.add_url_rule('/graphql', view_func=GraphQLView.as_view(
     'graphql',
