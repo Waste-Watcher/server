@@ -11,16 +11,20 @@ class itemInfo(graphene.ObjectType):
     itemid = graphene.ID()
     ownderid = graphene.String()
     item_type = graphene.String()
-    owner_id = graphene.String()
 
 class Query(graphene.ObjectType):
-    getUser = graphene.String(id=graphene.String())
-
-    def resolve_getUser(root, id):
+    getuserINfo = graphene.String(id = graphene.String())
+    getitemInfo = graphene.String(id = graphene.String())
+    def reseolve_getuserInfo(root, id):
         user = User.query.filter_by(id = id).first()
         if not user:
             return
         return userInfo(id = user.id, name = user.display_name, email = user.email, earth_coins = user.earth_coins, items = user.items)
+    def resolve_getitemInfo(root, id):
+        item = Item.query.filter_by(itemid = itemid).first()
+        if not item:
+            return
+        return itemInfo(itemid =  item.itemid, ownerid = item.ownerid, item_type = item.item_type)
 
 
 class newUser(graphene.Mutation):
