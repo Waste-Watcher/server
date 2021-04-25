@@ -13,7 +13,7 @@ db = SQLAlchemy(app)
 db.create_all()
 
 class userData(db.Model):
-    id = db.Column(db.String(80), primary_key=True)
+    identification = db.Column(db.String(80), primary_key=True,unique=True)
     name = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     #avatar = db.Column(db.String(120),nullable=False,default = default.jpg)
@@ -35,28 +35,26 @@ class Item(db.Model):
 @app.route("/", methods = ["GET","POST"])
 def getGraphQL():
     return(request.data)
-'''
+''' 
 
 class userInfo(graphene.ObjectType):
     id = graphene.ID()
     name = graphene.String()
     email = graphene.String()
-    earth_coins = graphene.Int()
-print(1)
+    earth_coins = graphene.Int(required = False)
+
 class Query(graphene.ObjectType):
     getUser = graphene.String(id=graphene.String())
     def resolve_getUser(parent, id):
         return f"{userInfo.id}, {userInfo.name}"
-print(2)
+
 class newUser(graphene.Mutation):
     class Arguments:
-        id = graphene.String()
+        id = graphene.ID()
         name = graphene.String()
         email = graphene.String()
-    
-    ok = graphene.Boolean()
-
     user = graphene.Field(lambda: userInfo)
+    ok = graphene.Boolean()
 
     def mutate(id, name, email):
         user = userInfo(id = id, name = name, email = email, earth_coins = 0)
@@ -67,16 +65,12 @@ class newUser(graphene.Mutation):
         ok = True
         print(user)
         return newUser(user = user, ok = ok)
-        
-print(3)
+
 class Mutations(graphene.ObjectType):
     new_user = newUser.Field()
-    
-print(4)
 
 schema = graphene.Schema(query = Query, mutation = Mutations)
 
-print(6)
 app.add_url_rule('/graphql', view_func=GraphQLView.as_view(
     'graphql',
     schema=schema,
